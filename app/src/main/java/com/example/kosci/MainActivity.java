@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView resultTextView;
     private TextView singleResultTextView;
     private ImageView[] images;
+    private boolean[] isDisabled;
 
     private final String singleResultText = "Wynik tego losowania: ";
     private final String resultText = "Wynik gry: ";
@@ -46,12 +47,36 @@ public class MainActivity extends AppCompatActivity {
         singleResultTextView = findViewById(R.id.singleResultTextView);
 
         images = new ImageView[5];
+        isDisabled = new boolean[5];
+
+        for (int i = 0; i < isDisabled.length; i++)
+            isDisabled[i] = false;
 
         images[0] = findViewById(R.id.image1);
         images[1] = findViewById(R.id.image2);
         images[2] = findViewById(R.id.image3);
         images[3] = findViewById(R.id.image4);
         images[4] = findViewById(R.id.image5);
+
+        for (int i = 0; i < images.length; i++)
+        {
+            int ii = i;
+            images[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    isDisabled[ii] = !isDisabled[ii];
+
+                    if(isDisabled[ii])
+                    {
+                        images[ii].setImageResource(R.drawable.question);
+                        images[ii].setImageAlpha(150);
+                    }
+                    else
+                        images[ii].setImageAlpha(255);
+                }
+            });
+        }
+
 
         findViewById(R.id.throwButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
 
                 for (int i = 0; i < images.length; i++)
                 {
+                    if(isDisabled[i])
+                        continue;
+
                     int randInt = rand.nextInt(6);
 
                     if(throwenNumbers.contains(randInt))
